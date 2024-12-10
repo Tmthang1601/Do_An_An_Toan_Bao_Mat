@@ -16,14 +16,15 @@ import java.util.Optional;
 public interface UserDAO extends DAO<User> {
     @Override
     @SqlUpdate("INSERT INTO user VALUES (default, :username, :password, :fullname, " +
-               ":email, :phoneNumber, :gender, :address, :role)")
+            ":email, :phoneNumber, :gender, :address, :role, :publicKey, :privateKey)")
     @GetGeneratedKeys("id")
     long insert(@BindBean User user);
 
     @Override
     @SqlUpdate("UPDATE user SET username = :username, password = :password, fullname = :fullname, " +
-               "email = :email, phoneNumber = :phoneNumber, gender = :gender, address = :address, role = :role " +
-               "WHERE id = :id")
+            "email = :email, phoneNumber = :phoneNumber, gender = :gender, address = :address, " +
+            "role = :role, publicKey = :publicKey, privateKey = :privateKey " +
+            "WHERE id = :id")
     void update(@BindBean User user);
 
     @Override
@@ -62,3 +63,4 @@ public interface UserDAO extends DAO<User> {
     @SqlQuery("SELECT COUNT(id) FROM user")
     int count();
 }
+
