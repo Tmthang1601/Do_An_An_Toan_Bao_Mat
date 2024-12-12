@@ -1,11 +1,13 @@
 package com.bookshopweb.servlet.client;
 
+import com.bookshopweb.beans.Key;
 import com.bookshopweb.beans.User;
+import com.bookshopweb.service.KeyService;
 import com.bookshopweb.service.UserService;
 import com.bookshopweb.utils.HashingUtils;
 import com.bookshopweb.utils.Protector;
+import com.bookshopweb.utils.SendMail;
 import com.bookshopweb.utils.Validator;
-import com.bookshopweb.utils.KeyPairUtils;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -13,15 +15,14 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.security.NoSuchAlgorithmException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.security.*;
+import java.time.LocalDateTime;
+import java.util.*;
 
 @WebServlet(name = "SignupServlet", value = "/signup")
 public class SignupServlet extends HttpServlet {
     private final UserService userService = new UserService();
+    private final KeyService keyService = new KeyService();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -86,46 +87,54 @@ public class SignupServlet extends HttpServlet {
         String successMessage = "Đã đăng ký thành công!";
         String errorMessage = "Đã có lỗi truy vấn!";
 
-        // Thêm logic sinh khóa
-        try {
-            // Sinh khóa RSA
-            java.security.KeyPair keyPair = KeyPairUtils.generateRSAKeyPair();
-            String publicKeyBase64 = KeyPairUtils.getPublicKeyBase64(keyPair.getPublic());
-            String privateKeyBase64 = KeyPairUtils.getPrivateKeyBase64(keyPair.getPrivate());
+        // Khi không có vi phạm trong kiểm tra các parameter
+        if (sumOfViolations == 0) {
+            User user = new User(
+                    0L,
+                    values.get("username"),
+                    HashingUtils.hash(values.get("password")),
+                    values.get("fullname"),
+                    values.get("email"),
+                    values.get("phoneNumber"),
+                    Protector.of(() -> Integer.parseInt(values.get("gender"))).get(0),
+                    values.get("address"),
+                    "CUSTOMER"
+            );
+            Protector.of(() -> userService.insert(user))
+                    .done(r -> {
+                        request.setAttribute("successMessage", successMessage);
+                        Key key = new Key();
+                        key.setId(0L);
+                        key.setUserId(r);
+                        key.setCreateAt(LocalDateTime.now());
+                        key.setExpirationAt(LocalDateTime.of(2999, 12, 31, 0, 0, 0));
 
-            // Khi không có vi phạm trong kiểm tra các parameter
-            if (sumOfViolations == 0) {
-                User user = new User(
-                        0L,
-                        values.get("username"),
-                        HashingUtils.hash(values.get("password")),
-                        values.get("fullname"),
-                        values.get("email"),
-                        values.get("phoneNumber"),
-                        Protector.of(() -> Integer.parseInt(values.get("gender"))).get(0),
-                        values.get("address"),
-                        "CUSTOMER",
-                        publicKeyBase64,    // Thêm public key
-                        privateKeyBase64    // Thêm private key
-                );
+                        KeyPairGenerator keyPairGenerator = null;
+                        try {
+                            keyPairGenerator = KeyPairGenerator.getInstance("RSA");
+                            keyPairGenerator.initialize(512); // Độ dài key là 2048-bit
+                        } catch (NoSuchAlgorithmException e) {
+                            throw new RuntimeException(e);
+                        }
+                        KeyPair keyPair = keyPairGenerator.generateKeyPair();
 
-                Protector.of(() -> userService.insert(user))
-                        .done(r -> {
-                            request.setAttribute("successMessage", successMessage);
-                            // Hiển thị private key để người dùng lưu
-                            request.setAttribute("privateKey", privateKeyBase64);
-                        })
-                        .fail(e -> {
-                            request.setAttribute("values", values);
-                            request.setAttribute("errorMessage", errorMessage);
-                        });
-            } else {
-                // Khi có vi phạm
-                request.setAttribute("values", values);
-                request.setAttribute("violations", violations);
-            }
-        } catch (NoSuchAlgorithmException e) {
-            request.setAttribute("errorMessage", "Lỗi sinh khóa bảo mật");
+                        PublicKey publicKey = keyPair.getPublic();
+                        PrivateKey privateKey = keyPair.getPrivate();
+
+                        String publicKeyBase64 = Base64.getEncoder().encodeToString(publicKey.getEncoded());
+                        String privateKeyBase64 = Base64.getEncoder().encodeToString(privateKey.getEncoded());
+                        key.setPublicKey(publicKeyBase64);
+                        SendMail.sendMail(values.get("email"), privateKeyBase64);
+                        keyService.insert(key);
+                    })
+                    .fail(e -> {
+                        request.setAttribute("values", values);
+                        request.setAttribute("errorMessage", errorMessage);
+                    });
+        } else {
+            // Khi có vi phạm
+            request.setAttribute("values", values);
+            request.setAttribute("violations", violations);
         }
 
         request.getRequestDispatcher("/WEB-INF/views/signupView.jsp").forward(request, response);

@@ -12,8 +12,6 @@ public class User {
     private int gender;
     private String address;
     private String role;
-    private String publicKey;
-    private String privateKey;
 
     public User() {}
 
@@ -25,8 +23,7 @@ public class User {
                 String phoneNumber,
                 int gender,
                 String address,
-                String role,
-                String publicKey, String privateKey) {
+                String role) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -36,8 +33,6 @@ public class User {
         this.gender = gender;
         this.address = address;
         this.role = role;
-        this.publicKey = publicKey;
-        this.privateKey = privateKey;
     }
 
     public long getId() {
@@ -111,21 +106,6 @@ public class User {
     public void setRole(String role) {
         this.role = role;
     }
-    public String getPublicKey() {
-        return publicKey;
-    }
-
-    public void setPublicKey(String publicKey) {
-        this.publicKey = publicKey;
-    }
-
-    public String getPrivateKey() {
-        return privateKey;
-    }
-
-    public void setPrivateKey(String privateKey) {
-        this.privateKey = privateKey;
-    }
 
     @Override
     public String toString() {
@@ -139,8 +119,6 @@ public class User {
                 .add("gender=" + gender)
                 .add("address='" + address + "'")
                 .add("role='" + role + "'")
-                .add("role='" + publicKey + "'")
-                .add("role='" + privateKey + "'")
                 .toString();
     }
 }
