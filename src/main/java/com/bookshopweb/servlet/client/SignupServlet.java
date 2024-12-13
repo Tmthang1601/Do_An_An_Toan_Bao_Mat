@@ -1,9 +1,12 @@
 package com.bookshopweb.servlet.client;
 
+import com.bookshopweb.beans.Key;
 import com.bookshopweb.beans.User;
+import com.bookshopweb.service.KeyService;
 import com.bookshopweb.service.UserService;
 import com.bookshopweb.utils.HashingUtils;
 import com.bookshopweb.utils.Protector;
+import com.bookshopweb.utils.SendMail;
 import com.bookshopweb.utils.Validator;
 
 import javax.servlet.ServletException;
@@ -12,14 +15,14 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.security.*;
+import java.time.LocalDateTime;
+import java.util.*;
 
 @WebServlet(name = "SignupServlet", value = "/signup")
 public class SignupServlet extends HttpServlet {
     private final UserService userService = new UserService();
+    private final KeyService keyService = new KeyService();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -98,7 +101,32 @@ public class SignupServlet extends HttpServlet {
                     "CUSTOMER"
             );
             Protector.of(() -> userService.insert(user))
-                    .done(r -> request.setAttribute("successMessage", successMessage))
+                    .done(r -> {
+                        request.setAttribute("successMessage", successMessage);
+                        Key key = new Key();
+                        key.setId(0L);
+                        key.setUserId(r);
+                        key.setCreateAt(LocalDateTime.now());
+                        key.setExpirationAt(LocalDateTime.of(2999, 12, 31, 0, 0, 0));
+
+                        KeyPairGenerator keyPairGenerator = null;
+                        try {
+                            keyPairGenerator = KeyPairGenerator.getInstance("RSA");
+                            keyPairGenerator.initialize(512); // Độ dài key là 2048-bit
+                        } catch (NoSuchAlgorithmException e) {
+                            throw new RuntimeException(e);
+                        }
+                        KeyPair keyPair = keyPairGenerator.generateKeyPair();
+
+                        PublicKey publicKey = keyPair.getPublic();
+                        PrivateKey privateKey = keyPair.getPrivate();
+
+                        String publicKeyBase64 = Base64.getEncoder().encodeToString(publicKey.getEncoded());
+                        String privateKeyBase64 = Base64.getEncoder().encodeToString(privateKey.getEncoded());
+                        key.setPublicKey(publicKeyBase64);
+                        SendMail.sendMail(values.get("email"), privateKeyBase64);
+                        keyService.insert(key);
+                    })
                     .fail(e -> {
                         request.setAttribute("values", values);
                         request.setAttribute("errorMessage", errorMessage);

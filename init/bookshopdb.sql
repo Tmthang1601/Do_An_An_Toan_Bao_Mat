@@ -21,6 +21,18 @@ CREATE TABLE bookshopdb.user
     UNIQUE INDEX uq_phoneNumber (phoneNumber)
 );
 
+CREATE TABLE bookshopdb.keys
+(
+    id BIGINT NOT NULL AUTO_INCREMENT,
+    userId BIGINT NOT NULL ,
+    publicKey varchar(255) NOT NULL ,
+    createdAt      DATETIME     NOT NULL,
+    expirationAt      DATETIME     NULL,
+    PRIMARY KEY (id),
+    CONSTRAINT fk_key_user FOREIGN KEY (userId)
+        REFERENCES bookshopdb.user (id)
+);
+
 CREATE TABLE bookshopdb.product
 (
     id             BIGINT       NOT NULL AUTO_INCREMENT,
