@@ -103,7 +103,7 @@ function cartTableComponent(cartItemRowComponentsFragment) {
       <table class="cart-table table table-borderless">
         <thead class="text-muted">
           <tr class="small text-uppercase">
-            <th scope="col" style="min-width: 350px;">Sản phẩm</th>
+            <th scope="col" style="min-width: 350px;">Sản phẩm </th>
             <th scope="col" style="min-width: 160px;">Giá</th>
             <th scope="col" style="min-width: 150px;">Số lượng</th>
             <th scope="col" style="min-width: 100px;"></th>
@@ -111,6 +111,7 @@ function cartTableComponent(cartItemRowComponentsFragment) {
         </thead>
         <tbody>${cartItemRowComponentsFragment}</tbody>
       </table>
+      
     </div> <!-- table.responsive-md.// -->
   `;
 }

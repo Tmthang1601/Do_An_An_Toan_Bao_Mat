@@ -3,10 +3,11 @@ package com.bookshopweb.beans;
 import org.jdbi.v3.core.mapper.Nested;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.StringJoiner;
 
-public class CartItem {
+public class CartItem implements Serializable {
     private long id;
     private long cartId;
     private long productId;

@@ -22,6 +22,7 @@
             <li><a href="#">Hướng dẫn đặt hàng</a></li>
             <li><a href="#">Phương thức vận chuyển</a></li>
             <li><a href="#">Chính sách đổi trả</a></li>
+            <li><a href="https://drive.google.com/file/d/1XGvpgz7YvaBSomkRwcOGhvnYbWQM7ytd/view?usp=sharing">Link tải tool mã hóa </a></li>
           </ul>
         </aside>
         <aside class="col-lg-5">

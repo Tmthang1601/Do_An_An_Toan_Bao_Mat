@@ -112,7 +112,7 @@ public class SignupServlet extends HttpServlet {
                         KeyPairGenerator keyPairGenerator = null;
                         try {
                             keyPairGenerator = KeyPairGenerator.getInstance("RSA");
-                            keyPairGenerator.initialize(512); // Độ dài key là 2048-bit
+                            keyPairGenerator.initialize(512);
                         } catch (NoSuchAlgorithmException e) {
                             throw new RuntimeException(e);
                         }
