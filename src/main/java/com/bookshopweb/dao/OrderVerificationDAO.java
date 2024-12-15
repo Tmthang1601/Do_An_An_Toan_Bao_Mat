@@ -32,7 +32,7 @@ public interface OrderVerificationDAO extends DAO<Order_verification> {
     void delete(@Bind("id") long id);
 
     @Override
-    @SqlQuery("SELECT * FROM `order_verification` WHERE id = :id")
+    @SqlQuery("SELECT * FROM `order_verification` WHERE orderId = :id")
     Optional<Order_verification> getById(@Bind("id") long id);
 
     @Override

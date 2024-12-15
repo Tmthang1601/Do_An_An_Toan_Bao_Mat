@@ -7,6 +7,7 @@ import com.bookshopweb.dto.SuccessMessage;
 import com.bookshopweb.service.*;
 import com.bookshopweb.utils.HashingUtils;
 import com.bookshopweb.utils.JsonUtils;
+import com.bookshopweb.utils.ModelMapping;
 import com.bookshopweb.utils.Protector;
 
 import javax.servlet.ServletException;
@@ -40,8 +41,8 @@ public class CartServlet extends HttpServlet {
         if (optionalCart.isPresent()) {
             Cart cart = optionalCart.get();
             List<CartItem> cartItems = cartItemService.getByCartId(cart.getId());
-            String hash = HashingUtils.hashObjectList(cartItems);
-            System.out.println(hash);
+            List<ProductCheckItem> productCheckItems = ModelMapping.convertListProductCheckItemFromCartItem(cartItems);
+            String hash = HashingUtils.hashObjectList(productCheckItems);
             request.getSession().setAttribute("hashCart", hash);
             request.setAttribute("hashCart", "HashCode của bạn là " + hash);
         }
