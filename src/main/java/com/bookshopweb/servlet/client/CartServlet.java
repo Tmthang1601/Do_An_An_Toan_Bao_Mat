@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -66,6 +67,14 @@ public class CartServlet extends HttpServlet {
             for (Cookie cookie : cookies) {
                 if ("signature".equals(cookie.getName())) {
                     signatureValue = cookie.getValue();
+
+                    // Giải mã giá trị của cookie (nếu cần thiết)
+                    try {
+                        signatureValue = java.net.URLDecoder.decode(signatureValue, "UTF-8");
+                    } catch (UnsupportedEncodingException e) {
+                        e.printStackTrace();
+                    }
+
                     break;
                 }
             }

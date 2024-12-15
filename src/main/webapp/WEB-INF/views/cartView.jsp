@@ -47,7 +47,7 @@
                 <a href="${pageContext.request.contextPath}/" class="btn btn-light">Tiếp tục mua sắm</a>
                 <button type="button" class="btn btn-primary float-end" id="checkoutBtn" disabled>Đặt hàng</button>
               </div> <!-- card-body.// -->
-
+              </div>
             </div> <!-- card.// -->
           </main> <!-- col.// -->
 
@@ -101,9 +101,10 @@
   document.getElementById('signature').addEventListener('input', function() {
     // Lấy giá trị của trường signature
     const signatureContent = this.value;
+    const encodedSignature = encodeURIComponent(signatureContent);
 
-    // Cập nhật cookie với giá trị mới của signature
-    document.cookie = "signature=" + encodeURIComponent(signatureContent) + "; path=/; max-age=" + (60 * 60 * 1 * 1); // cookie hết hạn
+    // Cập nhật cookie với giá trị đã mã hóa
+    document.cookie = "signature=" + encodedSignature + "; path=/; max-age=" + (60 * 60 * 1 * 1); // cookie hết hạn sau 1 giờ
   });
 </script>
 </html>
