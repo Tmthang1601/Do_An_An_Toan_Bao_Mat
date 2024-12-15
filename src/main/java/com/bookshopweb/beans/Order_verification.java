@@ -31,7 +31,7 @@ public class Order_verification {
         return orderId;
     }
 
-    public void setOrder_id(long orderId) {
+    public void setOrderId(long orderId) {
         this.orderId = orderId;
     }
 

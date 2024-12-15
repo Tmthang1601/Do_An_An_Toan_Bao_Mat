@@ -10,6 +10,7 @@ import org.jdbi.v3.sqlobject.statement.GetGeneratedKeys;
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
 import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -46,4 +47,8 @@ public interface KeyDao extends DAO<Key> {
     @SqlQuery("SELECT * FROM key ORDER BY <orderBy> <orderDir> LIMIT :limit OFFSET :offset")
     List<Key> getOrderedPart(@Bind("limit") int limit, @Bind("offset") int offset,
                               @Define("orderBy") String orderBy, @Define("orderDir") String orderDir);
+
+    @SqlQuery("SELECT * FROM `key` WHERE userId = :userId AND createdAt < :createAt AND expirationAt > :createAt")
+    Optional<Key> getKeyByUserId(@Bind("userId") long userId, @Bind("createAt") LocalDateTime createAt);
+
 }
