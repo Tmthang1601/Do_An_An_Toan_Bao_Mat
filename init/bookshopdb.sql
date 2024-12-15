@@ -21,7 +21,7 @@ CREATE TABLE bookshopdb.user
     UNIQUE INDEX uq_phoneNumber (phoneNumber)
 );
 
-CREATE TABLE bookshopdb.keys
+CREATE TABLE bookshopdb.key
 (
     id BIGINT NOT NULL AUTO_INCREMENT,
     userId BIGINT NOT NULL ,
@@ -31,6 +31,16 @@ CREATE TABLE bookshopdb.keys
     PRIMARY KEY (id),
     CONSTRAINT fk_key_user FOREIGN KEY (userId)
         REFERENCES bookshopdb.user (id)
+);
+
+CREATE TABLE bookshopdb.order_verification (
+    id BIGINT NOT NULL AUTO_INCREMENT,
+    orderId BIGINT NOT NULL,
+    hashcode VARCHAR(512) NOT NULL,
+    signature VARCHAR(512) NOT NULL,
+    createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (id),
+    FOREIGN KEY (orderId) REFERENCES orders(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE bookshopdb.product

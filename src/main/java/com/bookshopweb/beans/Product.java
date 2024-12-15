@@ -2,10 +2,11 @@ package com.bookshopweb.beans;
 
 import org.jetbrains.annotations.Nullable;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.StringJoiner;
 
-public class Product {
+public class Product implements Serializable {
     private long id;
     private String name;
     private double price;

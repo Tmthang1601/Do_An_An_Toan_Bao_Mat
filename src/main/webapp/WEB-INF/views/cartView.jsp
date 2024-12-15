@@ -38,10 +38,14 @@
             <div class="card">
 
               <div id="cart-table"></div>
-
-              <div class="card-body border-top">
-                <button type="button" class="btn btn-primary float-end" id="checkoutBtn" disabled>Đặt hàng</button>
+                <p class="card-title">
+                 ${hashCart}
+                </p>
+              <div>
+              <div class="card-body border-top d-flex align-items-center">
+                <input type="text" name="signature" id="signature" class="form-control mx-3" placeholder="Signature của bạn.....">
                 <a href="${pageContext.request.contextPath}/" class="btn btn-light">Tiếp tục mua sắm</a>
+                <button type="button" class="btn btn-primary float-end" id="checkoutBtn" disabled>Đặt hàng</button>
               </div> <!-- card-body.// -->
 
             </div> <!-- card.// -->
@@ -93,5 +97,13 @@
 <div class="toast-container position-fixed bottom-0 start-0 p-3"></div> <!-- toast-container.// -->
 
 </body>
+<script>
+  document.getElementById('signature').addEventListener('input', function() {
+    // Lấy giá trị của trường signature
+    const signatureContent = this.value;
 
+    // Cập nhật cookie với giá trị mới của signature
+    document.cookie = "signature=" + encodeURIComponent(signatureContent) + "; path=/; max-age=" + (60 * 60 * 1 * 1); // cookie hết hạn
+  });
+</script>
 </html>
