@@ -39,6 +39,7 @@
                   <th scope="col" style="min-width: 300px;">Sản phẩm</th>
                   <th scope="col" style="min-width: 100px;">Tổng tiền</th>
                   <th scope="col" style="min-width: 175px;">Trạng thái đơn hàng</th>
+                  <th scope="col" style="min-width: 175px;">Xác thực</th>
                   <th scope="col">Thao tác</th>
                 </tr>
                 </thead>
@@ -59,6 +60,19 @@
                         </c:when>
                         <c:when test="${order.status == 3}">
                           <span class="badge bg-danger">Hủy đơn hàng</span>
+                        </c:when>
+                      </c:choose>
+                    </td>
+                    <td>
+                      <c:choose>
+                        <c:when test="${order.authentic == 1}">
+                          <span class="badge bg-success"> Xác minh</span>
+                        </c:when>
+                        <c:when test="${order.authentic == 2}">
+                          <span class="badge bg-warning text-black"> Không đúng key</span>
+                        </c:when>
+                        <c:when test="${order.authentic == 3}">
+                          <span class="badge bg-danger"> Đã bị thay đổi đơn hàng</span>
                         </c:when>
                       </c:choose>
                     </td>
