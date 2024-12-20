@@ -7,13 +7,15 @@ public class OrderResponse {
     private String createdAt;
     private String name;
     private int status;
+    private int authentic;
     private double total;
 
-    public OrderResponse(long id, String createdAt, String name, int status, double total) {
+    public OrderResponse(long id, String createdAt, String name, int status,int authentic, double total) {
         this.id = id;
         this.createdAt = createdAt;
         this.name = name;
         this.status = status;
+        this.authentic = authentic;
         this.total = total;
     }
 
@@ -57,6 +59,14 @@ public class OrderResponse {
         this.total = total;
     }
 
+    public int getAuthentic() {
+        return authentic;
+    }
+
+    public void setAuthentic(int authentic) {
+        this.authentic = authentic;
+    }
+
     @Override
     public String toString() {
         return new StringJoiner(", ", OrderResponse.class.getSimpleName() + "[", "]")
@@ -64,6 +74,7 @@ public class OrderResponse {
                 .add("createdAt='" + createdAt + "'")
                 .add("name='" + name + "'")
                 .add("status=" + status)
+                .add("authentic=" + authentic)
                 .add("total=" + total)
                 .toString();
     }
