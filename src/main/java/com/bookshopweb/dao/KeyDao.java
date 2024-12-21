@@ -51,4 +51,6 @@ public interface KeyDao extends DAO<Key> {
     @SqlQuery("SELECT * FROM `key` WHERE userId = :userId AND createdAt < :createAt AND expirationAt > :createAt")
     Optional<Key> getKeyByUserId(@Bind("userId") long userId, @Bind("createAt") LocalDateTime createAt);
 
+    @SqlQuery("SELECT * FROM `key` WHERE userId = :userId")
+    Optional<Key> getByUserId(@Bind("userId") long userId);
 }
