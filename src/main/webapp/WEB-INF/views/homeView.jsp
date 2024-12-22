@@ -1,3 +1,4 @@
+<%@ page import="com.bookshopweb.beans.User" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
@@ -18,6 +19,19 @@
     <header class="section-heading py-4 d-flex justify-content-between">
       <h3 class="section-title">Danh mục sản phẩm</h3>
       <a class="btn btn-secondary" href="#" role="button" style="height: fit-content;">Xem tất cả</a>
+
+
+      <% User user = (User) request.getSession().getAttribute("currentUser");%>
+      <form method="post" action="VerifyOTP">
+        <% if (user != null) {%>
+        <input type="hidden" name="email" value="<%=user.getEmail()%>" />
+        <% } else{%>
+        <input type="hidden" name="email" value="" />
+        <% } %>
+        <button type="submit">Gửi OTP</button>
+      </form>
+
+
     </header> <!-- section-heading.// -->
     <div class="row item-grid">
       <c:forEach var="category" items="${requestScope.categories}">

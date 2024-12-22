@@ -25,6 +25,16 @@ public class UserService extends Service<User, UserDAO> implements UserDAO {
         return jdbi.withExtension(UserDAO.class, dao -> dao.getByEmail(email));
     }
 
+    public String selectOTP(String email) {
+        // Sử dụng withHandle để lấy kết quả trả về
+        return jdbi.withHandle(handle -> {
+            return handle.createQuery("SELECT otp FROM email WHERE email = :email")
+                    .bind("email", email)
+                    .mapTo(String.class)  // Chuyển kết quả thành String
+                    .findOnly();          // Lấy kết quả đầu tiên (trong trường hợp chỉ có 1 email duy nhất)
+        });
+    }
+
     @Override
     public Optional<User> getByPhoneNumber(String phoneNumber) {
         return jdbi.withExtension(UserDAO.class, dao -> dao.getByPhoneNumber(phoneNumber));
