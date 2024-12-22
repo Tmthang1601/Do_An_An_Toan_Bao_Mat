@@ -24,8 +24,8 @@ public class VerifyOTPServlet extends HttpServlet {
         User user = (User) session.getAttribute("currentUser");
 
         UserService userService = new UserService();
-//        boolean removeEmail = userService.deleteEmail(user.getEmail());
-//        boolean emailAdd = userService.insertEmail(user.getEmail(), otp);
+        boolean removeEmail = userService.deleteEmail(user.getEmail());
+        boolean emailAdd = userService.insertEmail(user.getEmail(), otp);
         String otpGet = userService.selectOTP(user.getEmail());
         SendMail.sendMail(email, otpGet);
         response.sendRedirect(request.getContextPath() + "/verifyOTPStep2");

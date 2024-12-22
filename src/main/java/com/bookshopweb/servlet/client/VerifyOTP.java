@@ -54,9 +54,14 @@ public class VerifyOTP extends HttpServlet {
             String publicKeyBase64 = Base64.getEncoder().encodeToString(publicKey.getEncoded());
             String privateKeyBase64 = Base64.getEncoder().encodeToString(privateKey.getEncoded());
             key.setPublicKey(publicKeyBase64);
-
-            SendMail.sendMail(user.getEmail(), privateKeyBase64);
-            resp.sendRedirect("/verifyOTPStep2");
+            Integer selectCountPublic = userService.selectPublicKey(Integer.parseInt(String.valueOf(user.getId())));
+            if (selectCountPublic > 0) {
+                resp.sendRedirect(req.getContextPath() + "/verifyOTPStep2");
+            }else {
+                userService.insertPublickey(Integer.parseInt(String.valueOf(user.getId())), publicKeyBase64);
+                SendMail.sendMail(user.getEmail(), privateKeyBase64);
+            }
+            resp.sendRedirect(req.getContextPath() + "/");
         }else{
             req.getRequestDispatcher("/WEB-INF/views/verifyOtp.jsp").forward(req, resp);
         }
