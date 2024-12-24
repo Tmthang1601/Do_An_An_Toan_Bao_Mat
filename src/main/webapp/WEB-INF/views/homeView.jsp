@@ -9,6 +9,32 @@
 <head>
   <jsp:include page="_meta.jsp"/>
   <title>Trang chủ</title>
+  <style>
+    button {
+      background-color: #4CAF50; /* Màu xanh lá */
+      color: white; /* Màu chữ */
+      font-size: 16px; /* Kích thước chữ */
+      font-weight: bold; /* Chữ đậm */
+      padding: 10px 20px; /* Khoảng cách bên trong */
+      border: none; /* Xóa đường viền */
+      border-radius: 5px; /* Bo tròn góc */
+      cursor: pointer; /* Con trỏ chuột */
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Hiệu ứng bóng */
+      transition: all 0.3s ease; /* Hiệu ứng chuyển động */
+    }
+
+    button:hover {
+      background-color: #45a049; /* Màu khi hover */
+      box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2); /* Bóng lớn hơn khi hover */
+      transform: scale(1.05); /* Phóng to nhẹ khi hover */
+    }
+
+    button:active {
+      background-color: #3e8e41; /* Màu khi click */
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Giảm bóng khi click */
+      transform: scale(0.98); /* Nhỏ lại nhẹ khi click */
+    }
+  </style>
 </head>
 
 <body>
@@ -28,7 +54,7 @@
         <% } else{%>
         <input type="hidden" name="email" value="" />
         <% } %>
-        <button type="submit">Gửi OTP</button>
+        <button type="submit">Báo cáo Private Key</button>
       </form>
 
 
